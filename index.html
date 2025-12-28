@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аптека Бекназар</title>
+<style>
+    body {font-family: 'Arial', sans-serif; margin:0; padding:0; background: #f4f4f9;}
+    header {background: #4CAF50; color: white; padding: 20px; text-align: center; font-size: 2em; font-weight: bold;}
+    nav {background: #333; color: white; padding: 10px; text-align: center;}
+    nav a {color: white; margin: 0 15px; text-decoration: none; font-weight: bold;}
+    .container {display: flex; flex-wrap: wrap; justify-content: center; padding: 20px;}
+    .product {background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); margin: 10px; padding: 15px; width: 220px; text-align: center;}
+    .product h3 {font-size: 1em; margin: 10px 0;}
+    .product p {color: #555; margin: 5px 0;}
+    .product button {background: #4CAF50; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;}
+    .cart {position: fixed; right: 20px; top: 100px; background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); padding: 15px; width: 300px; max-height: 80vh; overflow-y: auto;}
+    .cart h2 {text-align: center;}
+    .cart-item {display: flex; justify-content: space-between; margin: 10px 0;}
+    .cart-item span {flex:1;}
+    .cart-item button {background:red; border:none; color:white; border-radius:5px; cursor:pointer;}
+    footer {background: #333; color:white; padding: 20px; text-align: center; margin-top: 20px;}
+    .whatsapp {display:block; background:#25D366; color:white; padding:10px; text-decoration:none; border-radius:5px; text-align:center; margin-top:10px; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>Аптека Бекназар</header>
+<nav>
+<a href="#products">Товары</a>
+<a href="#about">О нас</a>
+<a href="#cart">Корзина</a>
+</nav>
+<section class="container" id="products">
+<!-- Здесь будут товары -->
+</section>
+<div class="cart" id="cart">
+<h2>Корзина</h2>
+<div id="cart-items"></div>
+<p><strong>Итого: </strong><span id="total">0</span> ₸</p>
+<a class="whatsapp" id="order-link" href="https://wa.me/77759195105" target="_blank">Заказать через WhatsApp</a>
+</div>
+<section id="about" style="padding:20px; text-align:center;">
+<h2>О нас</h2>
+<p>Аптека Бекназар, Курмангазы, ул. Абая 31.</p>
+</section>
+<script>
+const products = [
+  { name: "игровой коврик цирк сказка", price: 9250 },
+  { name: "ИГРУШКА СКАЗКА 52118", price: 2650 },
+  { name: "ИГРУШКА СКАЗКА 52116", price: 2270 },
+  { name: "КАПУЛЫ ДЛ СТИРКИ ДЕТСКИХ ВЕЩЕЙ", price: 6000 },
+  { name: "Крем-гидроф днев Фиалка и алтей 100мл ГМ", price: 2650 },
+  { name: "магнолия и диня крем для рук", price: 1200 },
+  { name: "МЕМБЕК 10МЛ №14", price: 7240 },
+  { name: "мистер поттер кондиционер 390мл алоэ крапива облепиха", price: 2650 },
+  { name: "он лайн гель для душа 3в1 400мл", price: 1860 },
+  { name: "он лайн гель для душа арбуз 400мл", price: 1680 },
+  { name: "он лайн кидс тайм шампунь 500мл", price: 1800 },
+  { name: "он лайн крем для рук 190мл", price: 1680 },
+  { name: "он лайн шампунь 500мл арника", price: 2000 },
+  { name: "секрет казанова", price: 4200 },
+  { name: "ТЕРМОМЕТР ДЛЯ ВЛДЫ РЫБКА", price: 465 },
+  { name: "термометр ртутный", price: 980 },
+  { name: "термометр ртутный", price: 980 },
+  { name: "Тыквы семена 50,0 ф/ч Белла", price: 380 },
+  { name: "чинарки сироп 250мл фл", price: 4830 },
+  { name: "Этиловый Спирт 70% 50 мл раствор", price: 250 },
+  { name: "Гель-бальзам Бадяга Серия 03 75 мл", price: 750 },
+  { name: "Диклоген 3 мл № 5 амп.", price: 300 },
+  { name: "Мазь преднизолоновая 5 мг -10 гр", price: 425 },
+  { name: "Набор щетка и расческа ар,2306", price: 960 },
+  { name: "Пульмикор 0,25мг/мл 2мл №20", price: 17900 },
+  { name: "Бусинка Кусачки детские", price: 900 },
+  { name: "Бусинка расческа-щетка", price: 1200 },
+  { name: "Бусинка ложка маленькая", price: 850 },
+  { name: "Ложка силиконовая изогнутая", price: 805 },
+  { name: "Бусинка прорезыватель Лошадка с водой", price: 900 },
+  { name: "Прорезыватель с водой Слоник", price: 900 },
+  { name: "Прорезыватель с водой Арбуз", price: 900 },
+  { name: "Бусинка бутылочка с ручками цветная 250мл", price: 1500 },
+  { name: "Бусинка детский набор", price: 2650 },
+  { name: "Бусинка бутылочка с погремушкой 240 мл 3+мес", price: 1400 },
+  { name: "Бусинка набор детской посуды", price: 2860 },
+  { name: "Бусинка набор игрушек в ванну (4шт)", price: 2650 },
+  { name: "Бусинка Молокоотсос ручной поршневой", price: 2650 },
+  { name: "Бусинка Прорезыватель силиконовой Слоник", price: 900 },
+  { name: "Круг на шею для купания с погремушкой 0-2 лет", price: 900 },
+  { name: "Бусинка 3+ пустышка цельносилик", price: 1450 },
+  { name: "Бусинка соска 6-18мес", price: 1250 },
+  { name: "Бусинка Пустышка соска силиконовая с прикусом", price: 1165 },
+  { name: "Бусинка пустышка силикон скошенная с кольцом Веселые животные", price: 750 },
+  { name: "Бусинка пустышка Цветочек силикон с кольцом", price: 750 },
+  { name: "Бусинка (6-18) Пустышка с колпачком соска силиконовая с прикусом", price: 860 },
+  { name: "9 МЕСЯЦЕВ ФОЛИЕВАЯ КИСЛОТА 0,4N30 ТАБЛ", price: 900 },
+  { name: "9 месяцев фолиевая кислота №30", price: 2000 },
+  { name: "Бадяга 100 мл, гель", price: 1350 },
+  { name: "Бадяга 100,0 гель от синяков и ушибов", price: 1350 },
+  { name: "Бишофит 100 мл, гель-бальзам, для суставов", price: 1500 },
+  { name: "ДЕГТЯРНЫЙ ШАМПУНЬ 150МЛ", price: 1500 },
+  { name: "Дегтярный шампунь от перхоти 15", price: 1350 },
+  { name: "Заживин гель от трещин 100,0 НЕТ ПРЦ +!", price: 1600 },
+  { name: "Крем Детский Кидс Подорожник 50", price: 435 },
+  { name: "Крем детский череда под подгузник 150 мл", price: 400 },
+  { name: "Луковый 150 мл шамп. от вып. волос", price: 435 },
+  { name: "Луковый бальзам от выпадения волос 150,0", price: 1450 },
+  { name: "Намозоль крем 100,0", price: 10000 },
+  { name: "Ревмалгон 100 мл, гель, для тела", price: 7800 },
+  { name: "Себопирокс шампунь от перхоти 150мл", price: 9650 },
+  { name: "Теймурова 150 мл спрей для ног", price: 8600 },
+  { name: "ТЕЙМУРОВА 150мл спрей д/ног", price: 12680 },
+  { name: "Угрисепт 100 мл, гель, для лица", price: 6500 },
+  { name: "Цинковый шампунь 150мл", price: 17500 },
+  { name: "Череда крем детс.п/подгузник 150,0", price: 900 },
+  { name: "AEVIT Dvit крем анти-стресс для лица 50", price: 3320 },
+  { name: "AEVIT Fvit крем восстан для лица и тела", price: 900 },
+  { name: "AEVIT Ультрапитат крем для рук 80 мл", price: 3000 },
+  { name: "Africa Kids. Крем для самых маленьких, для чувствительной детской кожи SPF45+ (Ф-411)", price: 1600 },
+  { name: "Akmasept Aloe Vera 50 мл спрей д/рук антимикробный", price: 435 },
+  { name: "Akmasept No Perfume 50 мл спрей д/рук антимикробный", price: 400 },
+  { name: "AVEAT Бутылочка дет ассорт 120 мл с ручками", price: 435 },
+  { name: "Avent 150 мл тренировочная бутылочка (SCF263/61)", price: 1450 },
+  { name: "Avent 300 мл поильник с мягким носиком (син/крас, SCF802/01,9+мес)", price: 10000 },
+  { name: "AVENT БУТЫЛОЧКА NATURAL RESPONSE 1МЕС+ 260МЛ SCY903/01", price: 7800 },
+  { name: "Avent Бутылочка Natural Response 260мл", price: 9650 },
+  { name: "AVENT БУТЫЛОЧКА NATURAL RESPONSE 3МЕС+ 330МЛ SCY906/01", price: 8600 },
+  { name: "BABE ДЕЗОДОРАНТ ШАРИКОВЫЙ Д/ТЕЛА 24Ч 50МЛ", price: 12680 },
+  { name: "Baboo Молокоотсос ручной", price: 6500 },
+  { name: "Baby Line ДЕТСКАЯ МОРСКАЯ СОЛЬ ДЛЯ ВАНН 500Г В КОРОБКЕ", price: 17500 },
+  { name: "Baby Line Детская пенка для подмывания 250мл", price: 900 },
+  { name: "Baby Line Детская соль для ванн с ромашкой 500г", price: 3320 },
+  { name: "Baby line масло д/массажа 250мл", price: 900 },
+  { name: "Baby Line МОЛОЧКО ДЛЯ ТЕЛА 250 МЛ", price: 3000 },
+  { name: "Baby Line Пенка для купания с ромашкой и пантенолом 500мл", price: 2650 },
+  { name: "Baby Line Прокладки для кормящих мам с суперпоглотелем 60 шт", price: 3580 },
+  { name: "Babyline с пантенолом и ромашкой 500 мл детское жидкое мыло для рук", price: 2450 },
+  { name: "Babyline с ромашкой и пантенолом 250 мл гель для купания", price: 2650 },
+  { name: "Babyline с ромашкой и пантенолом 250 мл пенка д/купания", price: 1860 },
+  { name: "Babyline с ромашкой, пантенолом и маслом подсолнечника 75 мл крем детск.нежн.", price: 3860 },
+  { name: "Babyline Средство для купания 2 в 1 шампунь, гель 250мл", price: 2850 },
+  { name: "Babyline средство для купания 3в1 200мл", price: 2000 },
+  { name: "Bebble шампунь для волос и тела 200мл", price: 1860 },
+  { name: "Bebble Facial крем для лица 50мл", price: 2950 },
+  { name: "Bebble гель при прорезывании зубов", price: 2000 },
+  { name: "Bebble зубная паста клуб 50 мл", price: 8160 },
+  { name: "Bioderma Atoderm Интенсив для глаз 100мл", price: 9480 },
+  { name: "Bioderma Hydrabio гель-крем увлажняющий 40 мл", price: 6180 },
+  { name: "Bioderma ABCDerm Chang Intensive крем увлажняющий для атопической кожи 75 мл", price: 13250 },
+  { name: "Bioderma ABCDERM Гель для умывания для детей 1 литр", price: 6250 },
+  { name: "Bioderma Atoderm Адерм ультра Крем Ультра 200 мл", price: 3850 },
+  { name: "Bioderma Atoderm Бальзам для губ 15 мл", price: 7150 },
+  { name: "Bioderma Atoderm Гель д/душа 500 мл", price: 13250 },
+  { name: "Bioderma Atoderm Гель для душа 1 литр", price: 13250 },
+  { name: "Bioderma Atoderm Интенсивный гель для умывания 1 литр", price: 6625 },
+  { name: "Bioderma Atoderm Интенсивный гель на умывания 500мл", price: 2780 },
+  { name: "Bioderma Atoderm Крем для рук 50 мл", price: 15280 },
+  { name: "Bioderma Atoderm Масло для душа 1 литр", price: 4680 },
+  { name: "Bioderma cicabio крем 40мл", price: 6250 },
+  { name: "Bioderma HODE DS+Шампунь 125мл", price: 7860 },
+  { name: "Bioderma Hode K Кератолитический шампунь при псориазе 150мл", price: 14280 },
+  { name: "Bioderma Hydrabio Hyalu+ Сыворотка 30 мл", price: 5860 },
+  { name: "Bioderma Hydrabio Мицеллярная вода для обезвоженной кожи 250 мл", price: 3280 },
+  { name: "Bioderma Hydrabio Н2О Мицеллярная вода 100 мл", price: 8650 },
+  { name: "Bioderma Kerato+ гель-крем, устраняющий несовершенства, черные точки и поствоспалительную гиперпигментацию 30мл", price: 8260 },
+  { name: "Bioderma Node Fluid шампунь мягкий 400 мл для всех типов волос без щелочи", price: 7980 },
+  { name: "Bioderma Photoderm MAX крем солнцезащит.д/аллер кожи и против фотостарения свет.тон 50+ 40мл", price: 7980 },
+  { name: "Bioderma Photoderm МАХ Солнцезащитный крем 40мл", price: 14260 },
+  { name: "Bioderma Photoderm Солнецезащитный крем SPF30", price: 9420 },
+  { name: "Bioderma Photoderm Солнцезащитное молочко Pediatric для детей 100мл SPF50+", price: 8120 },
+  { name: "Bioderma Photoderm Солнцезащитный аквафлюид 40 мл SPF50+", price: 7980 },
+  { name: "Bioderma Photoderm Солнцезащитный аквафлюид со светлым оттенком 40 мл SPF50+", price: 7980 }
+
+
+];
+
+ 
+
+
+const container = document.getElementById('products');
+const cartItems = document.getElementById('cart-items');
+const totalElem = document.getElementById('total');
+let cart = [];
+
+function renderProducts() {
+  products.forEach((product, index) => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `<h3>${product.name}</h3><p>${product.price} ₸</p><button onclick="addToCart(${index})">Добавить в корзину</button>`;
+    container.appendChild(div);
+  });
+}
+
+function addToCart(index) {
+  const product = products[index];
+  cart.push(product);
+  renderCart();
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  renderCart();
+}
+
+function renderCart() {
+  cartItems.innerHTML = '';
+  let total = 0;
+  cart.forEach((item, index) => {
+    total += item.price;
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `<span>${item.name} - ${item.price} ₸</span><button onclick="removeFromCart(${index})">X</button>`;
+    cartItems.appendChild(div);
+  });
+  totalElem.textContent = total;
+  document.getElementById('order-link').href = `https://wa.me/77759195105?text=Заказ: ${cart.map(item=>item.name).join(', ')}. Итого: ${total} ₸`;
+}
+
+renderProducts();
+</script>
+</body>
+</html>
